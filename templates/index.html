@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Data Visualisation{% endblock %}
+{% block body %}
+ <h1>Stock Data Visualization</h1>
+    <canvas id="stockChart" width="800" height="400"></canvas>
+    <script>
+        fetch('/data')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            const timestamps = data.map(d => d.timestamp);
+            const prices = data.map(d => d.close);
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        label: 'Stock Price',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        data: prices
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
