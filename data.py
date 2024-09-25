@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -41,7 +42,9 @@ engine = create_engine('postgresql://postgres:2001@localhost/postgres')
 #     # Optionally save latest data to Redis for quick access
 # redis_client.set('latest_stock_data', df.head(1).to_json())
 def fetch_and_update():
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=YOUR_API_KEY'
+    import os
+
+    url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=60min&apikey={os.getenv("ALPHAVANTAGE_API_KEY")}&datatype=csv'
     response = requests.get(url)
     data = response.json()
     time_series_data = data['Time Series (5min)']
